@@ -1,1 +1,59 @@
-oii
+#include <stdio.h>
+
+struct telefones
+{
+    char fixo[15];
+    char movel[16];
+};
+
+struct clientes
+{
+    int codigo;
+    char nome[50];
+    double cpf;
+    char sexo;
+    struct telefones tel;
+};
+
+struct modelos
+{
+    char marca[20];
+    char modelo[20];
+};
+
+struct produtos 
+{
+    int codigo;
+    char nome[20];
+    double valor;
+    struct modelos modelo;
+};
+
+struct carrinhos
+{
+    int quantidade [3];
+    double subtotal;
+    double desconto;
+    double total;
+    struct clientes cliente;
+    struct produtos produto[3];
+    
+};
+
+double clientescodigo(double cpf);
+char clientestel(char fixo[], char movel[]);
+int produtoscodigo(char marca[], char modelo[]);
+char produtosmodelo(char marca[], char modelo[]);
+void carrinhoscliente(struct clientes cliente);
+void carrinhosproduto(struct produtos produto[3]);
+int carrinhosquantidade(int quantidade[3]);
+double carrinhossubtotal(double subtotal);
+double carrinhosdesconto(double desconto, double subtotal);
+double carrinhostotal(double desconto, double total);
+
+int main()
+{
+    printf("Ola mundo");
+}
+
+
