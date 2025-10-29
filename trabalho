@@ -41,7 +41,7 @@ struct carrinhos
 };
 
 int clientescodigo(double cpf);
-char clientestel(char fixo[], char movel[]);
+void clientestel(struct telefones tel);
 int produtoscodigo(char marca[], char modelo[]);
 char produtosmodelo(char marca[], char modelo[]);
 void carrinhoscliente(struct clientes cliente);
@@ -53,29 +53,19 @@ double carrinhostotal(double desconto, double total);
 
 int main()
 {
-   struct clientes cliente1;
+   struct telefones tel1;
    
-   printf("Digite seu CPF: ");
-   scanf("%lf", &cliente1.cpf);
-   
-   cliente1.codigo = clientescodigo(cliente1.cpf);
-   
-   printf("O codigo do cliente é: %d", cliente1.codigo);
-   
+   clientestel(tel1);
 }
 
-int clientescodigo(double cpf)
+void clientestel(struct telefones tel)
 {
-    int codigo = 0;
+    printf("Digite seu telefone fixo: ");
+    scanf(" %14s", tel.fixo);
+    printf("Digite seu telefone movel: ");
+    scanf(" %15s", tel.movel);
     
-    while (cpf > 999999)
-    {
-        cpf = cpf / 10;
-    }
-    
-    codigo = cpf;
-    return codigo;
+    printf("O telefone fixo do cliente é: %s\n", tel.fixo);
+    printf("O telefone movel do cliente é: %s", tel.movel);
 }
-
-
 
