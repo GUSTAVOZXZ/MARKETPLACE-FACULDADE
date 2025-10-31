@@ -42,8 +42,8 @@ struct carrinhos
 
 int clientescodigo(double cpf);
 void clientestel(struct telefones tel);
-int produtoscodigo(char marca[], char modelo[]);
-char produtosmodelo(char marca[], char modelo[]);
+int produtoscodigo(struct modelos modelo);
+void produtosmodelo(struct modelos modelo);
 void carrinhoscliente(struct clientes cliente);
 void carrinhosproduto(struct produtos produto[3]);
 int carrinhosquantidade(int quantidade[3]);
@@ -53,9 +53,10 @@ double carrinhostotal(double desconto, double total);
 
 int main()
 {
-   struct telefones tel1;
+   struct modelos teste1;
    
-   clientestel(tel1);
+   produtosmodelo(teste1);
+   
 }
 
 void clientestel(struct telefones tel)
@@ -68,4 +69,35 @@ void clientestel(struct telefones tel)
     printf("O telefone fixo do cliente é: %s\n", tel.fixo);
     printf("O telefone movel do cliente é: %s", tel.movel);
 }
+int produtoscodigo(struct modelos modelo)
+{
+    // Pega os 2 primeiros caracteres da marca e do modelo
+    char c1 = modelo.marca[0];
+    char c2 = modelo.marca[1];
+    char c3 = modelo.modelo[0];
+    char c4 = modelo.modelo[1];
 
+    // Aqui não precisamos de (int), o próprio char já é tratado como número ASCII
+    int v1 = c1;
+    int v2 = c2;
+    int v3 = c3;
+    int v4 = c4;
+
+    // Calcula o código hash
+    int hash = v1 * (31*31*31) + v2 * (31*31) + v3 * 31 + v4;
+
+    return hash;
+}
+void produtosmodelo(struct modelos modelo)
+{
+   int codigo;
+   
+   printf("Digite a marca de seu produto: ");
+   scanf(" %19[^\n]", modelo.marca);
+   printf("Digite o modelo de seu produto: ");
+   scanf(" %19[^\n]", modelo.modelo);
+   
+   codigo = produtoscodigo(modelo);
+   
+   printf("O código de seu produto é: %d", codigo);   
+}
