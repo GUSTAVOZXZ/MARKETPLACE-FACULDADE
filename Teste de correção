@@ -50,51 +50,75 @@ void efetuarvenda(struct carrinhos carrinho, struct clientes cliente, int qtdcli
 
 int main()
 {
-   struct modelos teste1;
+   struct clientes cliente[3];
+   struct produtos produto[10];
+   struct carrinhos carrinho
    
-   produtosmodelo(teste1);
+   int qtdclientes = 0, qtdprodutos = 0;
+   int opcao;
    
+   do
+   {
+       printf("Seja bem vindo! Escolha sua opção!");
+       printf("\n===============================\n");
+       printf("1 - Cadastrar Clientes\n");
+       printf("2 - Cadastrar Produtos\n");
+       printf("3 - Listar Clientes\n");
+       printf("4 - Listar Produtos\n");
+       printf("5 - Visualizar Carrinho / Efetuar Venda\n");
+       printf("0 - Sair\n");
+       printf("Digite sua opção: ");
+       scanf("%d", &opcao);
+       
+       switch(opcao)
+       {
+           case 1:
+            cadastrarclientes(cliente, qtdcliente);
+            break;
+           case 2:
+            cadastrarprodutos(produto, qtdprodutos);
+            break;
+           case 3: 
+            listarclientes(cliente, qtdclientes);
+            break;
+           case 4:
+            listarprodutos(produto, qtdprodutos);
+            break;
+           case 5:
+            efetuarvenda(carrinho, cliente, qtdclientes, produto, qtdprodutos);
+            break;
+           case 0:
+            printf("\nObrigado, encerrando solicitação!\n");
+           default:
+            printf("\nOpção Inválida!");
+       }
+   } while(opção != 0);
+   
+   return 0;
 }
 
-void clientestel(struct telefones tel)
+void cadastrarclientes(struct clientes cliente[3], int qtdclientes)
 {
-    printf("Digite seu telefone fixo: ");
-    scanf(" %14s", tel.fixo);
-    printf("Digite seu telefone movel: ");
-    scanf(" %15s", tel.movel);
-    
-    printf("O telefone fixo do cliente é: %s\n", tel.fixo);
-    printf("O telefone movel do cliente é: %s", tel.movel);
+    printf("\nIniciando cadastro do cliente\n");
+    printf("==================================\n");
 }
+
+
+
+
 int produtoscodigo(struct modelos modelo)
 {
-    // Pega os 2 primeiros caracteres da marca e do modelo
     char c1 = modelo.marca[0];
     char c2 = modelo.marca[1];
     char c3 = modelo.modelo[0];
     char c4 = modelo.modelo[1];
 
-    // Aqui não precisamos de (int), o próprio char já é tratado como número ASCII
     int v1 = c1;
     int v2 = c2;
     int v3 = c3;
     int v4 = c4;
 
-    // Calcula o código hash
     int hash = v1 * (31*31*31) + v2 * (31*31) + v3 * 31 + v4;
 
     return hash;
-}
-void produtosmodelo(struct modelos modelo)
-{
-   int codigo;
-   
-   printf("Digite a marca de seu produto: ");
-   scanf(" %19[^\n]", modelo.marca);
-   printf("Digite o modelo de seu produto: ");
-   scanf(" %19[^\n]", modelo.modelo);
-   
-   codigo = produtoscodigo(modelo);
-   
-   printf("O código de seu produto é: %d", codigo);   
 }
