@@ -131,8 +131,7 @@ void cadastrarclientes(struct clientes cliente[3], int qtdclientes)
             {
                 printf("\nDeseja cadastrar outro cliente (1 = Sim / 0 = Não): ");
                 scanf("%d", &continuar);
-            } else
-                {
+            } else{
                     printf("Limite de cadastro atingido!");
                 }
     }while(qtdclientes < 3 && continuar == 1);
@@ -152,4 +151,16 @@ int produtoscodigo(struct modelos modelo)
     int hash = v1 * (31*31*31) + v2 * (31*31) + v3 * 31 + v4;
 
     return hash;
+}
+void cadastrarproduto(struct produtos produto[10], int qtdprodutos)
+{
+    printf("||Cadastro Produtos||\n");
+    printf("Marca do produto: ");
+    scanf(" %[^\n]", produto[qtdprodutos].modelo.marca);
+    printf("Modelo do produto: ");
+    produto[qtdprodutos].codigo = produtoscodigo(modelo.hash);
+    scanf(" %[^\n]", produto[qtdprodutos].modelo.modelo);
+    printf("Valor: ");
+    scanf("%lf", produto[qtdprodutos].valor);
+    
 }
