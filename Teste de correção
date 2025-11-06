@@ -46,13 +46,13 @@ void listarclientes(struct clientes cliente[3], int qtdclientes);
 int produtoscodigo(struct modelos modelo);
 void cadastrarproduto(struct produtos produto[10], int qtdprodutos);
 void listarprodutos(struct produtos produto[10], int qtdprodutos);
-void efetuarvenda(struct carrinhos carrinho, struct clientes cliente, int qtdclientes, struct produtos produto, int qtdprodutos);
+void efetuarvenda(struct carrinhos carrinho, struct clientes cliente[3], int qtdclientes, struct produtos produto[10], int qtdprodutos);
 
 int main()
 {
    struct clientes cliente[3];
    struct produtos produto[10];
-   struct carrinhos carrinho
+   struct carrinhos carrinho;
    
    int qtdclientes = 0, qtdprodutos = 0;
    int opcao;
@@ -73,71 +73,70 @@ int main()
        switch(opcao)
        {
            case 1:
-            cadastrarclientes(cliente, qtdcliente);
+            cadastrarclientes(cliente, qtdclientes);
             break;
            case 2:
-            cadastrarprodutos(produto, qtdprodutos);
+            //cadastrarproduto(produto, qtdprodutos);
             break;
            case 3: 
-            listarclientes(cliente, qtdclientes);
+            //listarclientes(cliente, qtdclientes);
             break;
            case 4:
-            listarprodutos(produto, qtdprodutos);
+            //listarprodutos(produto, qtdprodutos);
             break;
            case 5:
-            efetuarvenda(carrinho, cliente, qtdclientes, produto, qtdprodutos);
+            //efetuarvenda(carrinho, cliente, qtdclientes, produto, qtdprodutos);
             break;
            case 0:
             printf("\nObrigado, encerrando solicitação!\n");
            default:
             printf("\nOpção Inválida!");
        }
-   } while(opção != 0);
+   } while(opcao != 0);
    
    return 0;
 }
 
+int codigocliente(double cpf) 
+{
+    int codigo = (int)(cpf / 100000);
+    return codigo;
+}
 void cadastrarclientes(struct clientes cliente[3], int qtdclientes)
 {
     int continuar;
     
-    if(qtdclientes > 3)
+    if(qtdclientes >= 3)
     {
         printf("Limite de cadastro atingido!");
     }
     
     do
     {
-        printf("\nIniciando cadastro do cliente\n");
-        printf("==================================\n");
-        printf("Nome Completo: ");
-        scanf(" %[^\n]", cliente[qtdclientes].nome);
-        printf("Qual seu sexo? (M/F): ");
-        scanf(" %[^\n]", cliente[qtdclientes].sexo);
-        printf("Digite seu CPF: ");
-        scanf("%lf", cliente[qtdclientes].cpf);
-        printf("Digite seu número de telefone fixo: ");
-        scanf(" %[^\n]", cliente[qtdclientes].fixo);
-        printf("Digite o número de seu telefone móvel: ");
-        scanf(" %[^\n]", cliente[qtdclientes].movel);
+        printf("||Cadstro de clientes||\n");
+        printf("Nome: ");
+        scanf(" %49[^\n]", &cliente[qtdclientes].nome);
+        printf("Sexo: ");
+        scanf(" %c", &cliente[qtdclientes].sexo);
+        printf("CPF: ");
+        scanf("%lf", &cliente[qtdclientes].cpf);
+        cliente[qtdclientes].codigo = codigocliente(cliente[qtdclientes].cpf);
+        printf("Telefone fixo: ");
+        scanf(" %14[^\n]", &cliente[qtdclientes].tel.fixo);
+        printf("Telefone Móvel: ");
+        scanf(" %15[^\n]", &cliente[qtdclientes].tel.movel);
+        printf("O código do cliente é: %d", cliente[qtdclientes].codigo);
         
-        cliente[qtdcliente].codigo = codigocliente(cliente[qtdcliente].cpf)
-        printf("\nCódigo do cliente gerado: %d", cliente[qtdclientes].codigo);
-        (qtdcliente++);
-        
-        if(qtdcliente < 3)
-        {
-            printf("Deseja cadastrar um novo cliente (1 = sim / 0 = não) ");
-            scanf("%d", &continuar);
-        } else
+            if(qtdclientes < 3)
             {
-                printf("Limite de cadastro atingido!");
-            }
-}   }while(qtdclientes < 3 && continuar == 1);
-
-
-
-
+                printf("\nDeseja cadastrar outro cliente (1 = Sim / 0 = Não): ");
+                scanf("%d", &continuar);
+            } else
+                {
+                    printf("Limite de cadastro atingido!");
+                }
+    }while(qtdclientes < 3 && continuar == 1);
+}
 int produtoscodigo(struct modelos modelo)
 {
     char c1 = modelo.marca[0];
