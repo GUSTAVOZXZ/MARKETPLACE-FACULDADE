@@ -76,10 +76,10 @@ int main()
             cadastrarclientes(cliente, qtdclientes);
             break;
            case 2:
-            //cadastrarproduto(produto, qtdprodutos);
+            cadastrarproduto(produto, qtdprodutos);
             break;
            case 3: 
-            //listarclientes(cliente, qtdclientes);
+            listarclientes(cliente, qtdclientes);
             break;
            case 4:
             //listarprodutos(produto, qtdprodutos);
@@ -125,7 +125,6 @@ void cadastrarclientes(struct clientes cliente[3], int qtdclientes)
         scanf(" %14[^\n]", &cliente[qtdclientes].tel.fixo);
         printf("Telefone Móvel: ");
         scanf(" %15[^\n]", &cliente[qtdclientes].tel.movel);
-        printf("O código do cliente é: %d", cliente[qtdclientes].codigo);
         
             if(qtdclientes < 3)
             {
@@ -154,13 +153,49 @@ int produtoscodigo(struct modelos modelo)
 }
 void cadastrarproduto(struct produtos produto[10], int qtdprodutos)
 {
-    printf("||Cadastro Produtos||\n");
-    printf("Marca do produto: ");
-    scanf(" %[^\n]", produto[qtdprodutos].modelo.marca);
-    printf("Modelo do produto: ");
-    produto[qtdprodutos].codigo = produtoscodigo(modelo.hash);
-    scanf(" %[^\n]", produto[qtdprodutos].modelo.modelo);
-    printf("Valor: ");
-    scanf("%lf", produto[qtdprodutos].valor);
+    int continuar;
     
+    if(qtdprodutos >= 10)
+    {
+        printf("Limite de cadastro atingido!");
+    }
+    
+    do
+    {
+        printf("||Cadastro Produtos||\n");
+        printf("Nome do produto: ");
+        scanf(" %[^\n]", produto[qtdprodutos].nome);
+        printf("Marca do produto: ");
+        scanf(" %[^\n]", produto[qtdprodutos].modelo.marca);
+        printf("Modelo do produto: ");
+        scanf(" %[^\n]", produto[qtdprodutos].modelo.modelo);
+        produto[qtdprodutos].codigo = produtoscodigo(produto[qtdprodutos].modelo);
+        printf("Valor: ");
+        scanf("%lf", &produto[qtdprodutos].valor);
+        if(qtdprodutos < 10)
+                {
+                    printf("\nDeseja cadastrar outro cliente (1 = Sim / 0 = Não): ");
+                    scanf("%d", &continuar);
+                } else{
+                        printf("Limite de cadastro atingido!");
+                    }
+    }while(qtdprodutos < 10 && continuar == 1);
+}
+void listarclientes(struct clientes cliente[3], int qtdclientes)
+{
+    if(qtdclientes == 0)
+    {
+        printf("Não há nenhum cliente cadastrado!\n");
+    }
+    
+    for(int i = 0; i < qtdclientes; i++)
+    {
+        printf("Nome: %s\n", cliente[i].nome);
+        printf("Código: %d\n", cliente[i].codigo);
+        printf("CPF: %.0lf\n", cliente[i].cpf);
+        printf("Sexo: %c\n", cliente[i].sexo);
+        printf("Telefone Fixo: %s\n", cliente[i].tel.fixo);
+        printf("Telefone movel: %s\n", cliente[i].tel.movel);
+        printf("\n---------------------------------------------\n");
+    }
 }
