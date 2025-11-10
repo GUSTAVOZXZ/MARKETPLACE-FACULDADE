@@ -40,64 +40,191 @@ struct carrinhos
     
 };
 
-int clientescodigo(double cpf);
-void clientestel(struct telefones tel);
+int codigocliente(double cpf);
+int cadastrarclientes(struct clientes cliente[], int qtdclientes, int TAM_CLI);
+void listarclientes(struct clientes cliente[], int qtdclientes);
 int produtoscodigo(struct modelos modelo);
-void produtosmodelo(struct modelos modelo);
-void carrinhoscliente(struct clientes cliente);
-void carrinhosproduto(struct produtos produto[3]);
-int carrinhosquantidade(int quantidade[3]);
-double carrinhossubtotal(double subtotal);
-double carrinhosdesconto(double desconto, double subtotal);
-double carrinhostotal(double desconto, double total);
+int cadastrarproduto(struct produtos produto[], int qtdprodutos, int TAM_PROD);
+void listarprodutos(struct produtos produto[], int qtdprodutos);
+void efetuarvenda(struct carrinhos carrinho, struct clientes cliente[], int qtdclientes, struct produtos produto[], int qtdprodutos);
 
 int main()
 {
-   struct modelos teste1;
+   struct clientes cliente[3];
+   struct produtos produto[10];
+   struct carrinhos carrinho;
    
-   produtosmodelo(teste1);
+   int TAM_CLI = 3, TAM_PROD = 10;
+   int qtdclientes = 0, qtdprodutos = 0;
+   int opcao;
    
+   do
+   {
+       printf("Seja bem vindo! Escolha sua opção!");
+       printf("\n===============================\n");
+       printf("1 - Cadastrar Clientes\n");
+       printf("2 - Cadastrar Produtos\n");
+       printf("3 - Listar Clientes\n");
+       printf("4 - Listar Produtos\n");
+       printf("5 - Visualizar Carrinho / Efetuar Venda\n");
+       printf("0 - Sair\n");
+       printf("Digite sua opção: ");
+       scanf("%d", &opcao);
+       
+       switch(opcao)
+       {
+           case 1:
+            qtdclientes = cadastrarclientes(cliente, qtdclientes,TAM_CLI);
+            break;
+           case 2:
+            qtdprodutos = cadastrarproduto(produto, qtdprodutos, TAM_PROD);
+            break;
+           case 3: 
+            listarclientes(cliente, qtdclientes);
+            break;
+           case 4:
+            listarprodutos(produto, qtdprodutos);
+            break;
+           case 5:
+            //efetuarvenda(carrinho, cliente, qtdclientes, produto, qtdprodutos);
+            break;
+           case 0:
+            printf("\nObrigado, encerrando solicitação!\n");
+           default:
+            printf("\nOpção Inválida!\n");
+       }
+   } while(opcao != 0);
+   
+   return 0;
 }
 
-void clientestel(struct telefones tel)
+int codigocliente(double cpf) 
 {
-    printf("Digite seu telefone fixo: ");
-    scanf(" %14s", tel.fixo);
-    printf("Digite seu telefone movel: ");
-    scanf(" %15s", tel.movel);
+    int codigo = (int)(cpf / 100000);
+    return codigo;
+}
+int cadastrarclientes(struct clientes cliente[], int qtdclientes, int TAM_CLI)
+{
+    int continuar;
     
-    printf("O telefone fixo do cliente é: %s\n", tel.fixo);
-    printf("O telefone movel do cliente é: %s", tel.movel);
+    if(qtdclientes >= TAM_CLI)
+    {
+        printf("Limite de cadastro atingido!");
+    }
+    
+    do
+    {
+        printf("||Cadstro de clientes||\n");
+        printf("Nome: ");
+        scanf(" %49[^\n]", cliente[qtdclientes].nome);
+        printf("Sexo: ");
+        scanf(" %c", &cliente[qtdclientes].sexo);
+        printf("CPF: ");
+        scanf("%lf", &cliente[qtdclientes].cpf);
+        cliente[qtdclientes].codigo = codigocliente(cliente[qtdclientes].cpf);
+        printf("Telefone fixo: ");
+        scanf(" %14[^\n]", cliente[qtdclientes].tel.fixo);
+        printf("Telefone Móvel: ");
+        scanf(" %15[^\n]", cliente[qtdclientes].tel.movel);
+        
+        qtdclientes++;
+        
+            if(qtdclientes < TAM_CLI)
+            {
+                printf("\nDeseja cadastrar outro cliente (1 = Sim / 0 = Não): ");
+                scanf("%d", &continuar);
+            } else{
+                    printf("Limite de cadastro atingido!");
+                }
+    }while(qtdclientes < TAM_CLI && continuar == 1);
+    
+    return qtdclientes;
 }
 int produtoscodigo(struct modelos modelo)
 {
-    // Pega os 2 primeiros caracteres da marca e do modelo
     char c1 = modelo.marca[0];
     char c2 = modelo.marca[1];
     char c3 = modelo.modelo[0];
     char c4 = modelo.modelo[1];
 
-    // Aqui não precisamos de (int), o próprio char já é tratado como número ASCII
     int v1 = c1;
     int v2 = c2;
     int v3 = c3;
     int v4 = c4;
 
-    // Calcula o código hash
     int hash = v1 * (31*31*31) + v2 * (31*31) + v3 * 31 + v4;
 
     return hash;
 }
-void produtosmodelo(struct modelos modelo)
+int cadastrarproduto(struct produtos produto[], int qtdprodutos, int TAM_PROD)
 {
-   int codigo;
-   
-   printf("Digite a marca de seu produto: ");
-   scanf(" %19[^\n]", modelo.marca);
-   printf("Digite o modelo de seu produto: ");
-   scanf(" %19[^\n]", modelo.modelo);
-   
-   codigo = produtoscodigo(modelo);
-   
-   printf("O código de seu produto é: %d", codigo);   
+    int continuar;
+    
+    if(qtdprodutos >= TAM_PROD)
+    {
+        printf("Limite de cadastro atingido!");
+    }
+    
+    do
+    {
+        printf("||Cadastro Produtos||\n");
+        printf("Nome do produto: ");
+        scanf(" %19[^\n]", produto[qtdprodutos].nome);
+        printf("Marca do produto: ");
+        scanf(" %19[^\n]", produto[qtdprodutos].modelo.marca);
+        printf("Modelo do produto: ");
+        scanf(" %19[^\n]", produto[qtdprodutos].modelo.modelo);
+        produto[qtdprodutos].codigo = produtoscodigo(produto[qtdprodutos].modelo);
+        printf("Valor: ");
+        scanf("%lf", &produto[qtdprodutos].valor);
+        
+        qtdprodutos++;
+        
+        if(qtdprodutos < TAM_PROD)
+            {
+                printf("\nDeseja cadastrar outro produto (1 = Sim / 0 = Não): ");
+                scanf("%d", &continuar);
+            } else{
+                    printf("Limite de cadastro atingido!");
+                }
+    }while(qtdprodutos < TAM_PROD && continuar == 1);
+    
+    return qtdprodutos;
+}
+void listarclientes(struct clientes cliente[], int qtdclientes)
+{
+    if(qtdclientes == 0)
+    {
+        printf("Não há nenhum cliente cadastrado!\n");
+    }
+    
+    for(int i = 0; i < qtdclientes; i++)
+    {
+        printf("\n|Lista de Clientes|\n");
+        printf("Nome: %s\n", cliente[i].nome);
+        printf("Código: %d\n", cliente[i].codigo);
+        printf("CPF: %.0lf\n", cliente[i].cpf);
+        printf("Sexo: %c\n", cliente[i].sexo);
+        printf("Telefone Fixo: %s\n", cliente[i].tel.fixo);
+        printf("Telefone movel: %s\n", cliente[i].tel.movel);
+        printf("\n---------------------------------------------\n");
+    }
+}
+void listarprodutos(struct produtos produto[], int qtdprodutos)
+{
+    if(qtdprodutos == 0)
+    {
+        printf("Não há nenhum produto cadastrado!\n");
+    }
+    
+    for(int i = 0; i < qtdprodutos; i++)
+    {
+        printf("\n|Lista de Produtos|\n");
+        printf("Nome: %s\n", produto[i].nome);
+        printf("Marca: %s\n", produto[i].modelo.marca);
+        printf("Modelo: %s\n", produto[i].modelo.modelo);
+        printf("Código: %d\n", produto[i].codigo);
+        printf("Valor: %.2lf\n", produto[i].valor);
+        printf("\n---------------------------------------------\n");
+    }
 }
