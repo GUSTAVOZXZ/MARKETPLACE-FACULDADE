@@ -41,12 +41,14 @@ struct carrinhos
 };
 
 int codigocliente(double cpf);
-int cadastrarclientes(struct clientes cliente[3], int qtdclientes);
-void listarclientes(struct clientes cliente[3], int qtdclientes);
+int cadastrarclientes(struct clientes cliente[], int qtdclientes, int TAM_CLI);
+void listarclientes(struct clientes cliente[], int qtdclientes);
 int produtoscodigo(struct modelos modelo);
-int cadastrarproduto(struct produtos produto[10], int qtdprodutos);
-void listarprodutos(struct produtos produto[10], int qtdprodutos);
-void efetuarvenda(struct carrinhos carrinho, struct clientes cliente[3], int qtdclientes, struct produtos produto[10], int qtdprodutos);
+int cadastrarproduto(struct produtos produto[], int qtdprodutos, int TAM_PROD);
+void listarprodutos(struct produtos produto[], int qtdprodutos);
+int localizaproduto(struct produtos produto[], int qtdprodutos, int TAM_CARRINHO);
+void listarcarrinho (struct carrinhos carrinho);
+void efetuarvenda(struct carrinhos carrinho, struct clientes cliente[], int qtdclientes, struct produtos produto[], int qtdprodutos);
 
 int main()
 {
@@ -54,6 +56,7 @@ int main()
    struct produtos produto[10];
    struct carrinhos carrinho;
    
+   int TAM_CLI = 3, TAM_PROD = 10, TAM_CARRINHO = 3;
    int qtdclientes = 0, qtdprodutos = 0;
    int opcao;
    
@@ -73,10 +76,10 @@ int main()
        switch(opcao)
        {
            case 1:
-            qtdclientes = cadastrarclientes(cliente, qtdclientes);
+            qtdclientes = cadastrarclientes(cliente, qtdclientes,TAM_CLI);
             break;
            case 2:
-            qtdprodutos = cadastrarproduto(produto, qtdprodutos);
+            qtdprodutos = cadastrarproduto(produto, qtdprodutos, TAM_PROD);
             break;
            case 3: 
             listarclientes(cliente, qtdclientes);
@@ -85,7 +88,7 @@ int main()
             listarprodutos(produto, qtdprodutos);
             break;
            case 5:
-            //efetuarvenda(carrinho, cliente, qtdclientes, produto, qtdprodutos);
+            localizaproduto(produto, qtdprodutos, TAM_CARRINHO);
             break;
            case 0:
             printf("\nObrigado, encerrando solicitação!\n");
@@ -102,11 +105,11 @@ int codigocliente(double cpf)
     int codigo = (int)(cpf / 100000);
     return codigo;
 }
-int cadastrarclientes(struct clientes cliente[3], int qtdclientes)
+int cadastrarclientes(struct clientes cliente[], int qtdclientes, int TAM_CLI)
 {
     int continuar;
     
-    if(qtdclientes >= 3)
+    if(qtdclientes >= TAM_CLI)
     {
         printf("Limite de cadastro atingido!");
     }
@@ -128,14 +131,14 @@ int cadastrarclientes(struct clientes cliente[3], int qtdclientes)
         
         qtdclientes++;
         
-            if(qtdclientes < 3)
+            if(qtdclientes < TAM_CLI)
             {
                 printf("\nDeseja cadastrar outro cliente (1 = Sim / 0 = Não): ");
                 scanf("%d", &continuar);
             } else{
                     printf("Limite de cadastro atingido!");
                 }
-    }while(qtdclientes < 3 && continuar == 1);
+    }while(qtdclientes < TAM_CLI && continuar == 1);
     
     return qtdclientes;
 }
@@ -155,11 +158,11 @@ int produtoscodigo(struct modelos modelo)
 
     return hash;
 }
-int cadastrarproduto(struct produtos produto[10], int qtdprodutos)
+int cadastrarproduto(struct produtos produto[], int qtdprodutos, int TAM_PROD)
 {
     int continuar;
     
-    if(qtdprodutos >= 10)
+    if(qtdprodutos >= TAM_PROD)
     {
         printf("Limite de cadastro atingido!");
     }
@@ -179,18 +182,18 @@ int cadastrarproduto(struct produtos produto[10], int qtdprodutos)
         
         qtdprodutos++;
         
-        if(qtdprodutos < 10)
+        if(qtdprodutos < TAM_PROD)
             {
                 printf("\nDeseja cadastrar outro produto (1 = Sim / 0 = Não): ");
                 scanf("%d", &continuar);
             } else{
                     printf("Limite de cadastro atingido!");
                 }
-    }while(qtdprodutos < 10 && continuar == 1);
+    }while(qtdprodutos < TAM_PROD && continuar == 1);
     
     return qtdprodutos;
 }
-void listarclientes(struct clientes cliente[3], int qtdclientes)
+void listarclientes(struct clientes cliente[], int qtdclientes)
 {
     if(qtdclientes == 0)
     {
@@ -209,7 +212,7 @@ void listarclientes(struct clientes cliente[3], int qtdclientes)
         printf("\n---------------------------------------------\n");
     }
 }
-void listarprodutos(struct produtos produto[10], int qtdprodutos)
+void listarprodutos(struct produtos produto[], int qtdprodutos)
 {
     if(qtdprodutos == 0)
     {
@@ -226,4 +229,40 @@ void listarprodutos(struct produtos produto[10], int qtdprodutos)
         printf("Valor: %.2lf\n", produto[i].valor);
         printf("\n---------------------------------------------\n");
     }
+}
+int localizaproduto(struct produtos produto[], int qtdprodutos, int TAM_CARRINHO)
+{
+    int valor = 0, continuar, quantidade = 0;
+    
+    if(quantidade >= TAM_CARRINHO)
+    {
+        printf("Limite de produtos atingidos!");
+    }
+    
+    printf("Digite o código do produto: ");
+    scanf("%d", &valor);
+    
+    do{
+        for(int i = 0;  i < qtdprodutos; i++)
+        {
+            if(produto[i].codigo == valor)
+            {
+                printf("\n|Produto Encontrado|\n");
+                printf("Código: %d\n", produto[i].codigo);
+                printf("Nome: %s\n", produto[i].nome);
+                printf("Marca: %s\n", produto[i].modelo.marca);
+                printf("Modelo: %s\n", produto[i].modelo.modelo);
+                printf("Valor: %.2lf\n", produto[i].valor);
+            }
+        }
+        
+        if(quantidade < TAM_CARRINHO)
+        {
+            printf("\nDeseja solicitar outro produto (1 = Sim / 0 = Não): ");
+            scanf("%d", &continuar);
+        }else{
+            printf("Limite de produtos atingidos!");
+        }
+        
+    }while(quantidade < TAM_CARRINHO && continuar == 1);
 }
