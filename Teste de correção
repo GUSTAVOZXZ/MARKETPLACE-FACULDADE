@@ -46,8 +46,9 @@ void listarclientes(struct clientes cliente[], int qtdclientes);
 int produtoscodigo(struct modelos modelo);
 int cadastrarproduto(struct produtos produto[], int qtdprodutos, int TAM_PROD);
 void listarprodutos(struct produtos produto[], int qtdprodutos);
-int localizaproduto(struct produtos produto[], int qtdprodutos, int TAM_CARRINHO);
-void listarcarrinho (struct carrinhos carrinho);
+int localizaproduto(struct produtos produto[], int qtdprodutos, int TAM_CARRINHO, struct carrinhos carrinho, int qtdcarrinho);
+int localizacliente(struct clientes cliente[], int qtdclientes);
+double calculasubtotal (struct carrinhos carrinho, int qtdcarrinho);
 void efetuarvenda(struct carrinhos carrinho, struct clientes cliente[], int qtdclientes, struct produtos produto[], int qtdprodutos);
 
 int main()
@@ -57,7 +58,7 @@ int main()
    struct carrinhos carrinho;
    
    int TAM_CLI = 3, TAM_PROD = 10, TAM_CARRINHO = 3;
-   int qtdclientes = 0, qtdprodutos = 0;
+   int qtdclientes = 0, qtdprodutos = 0, qtdcarrinho = 0;
    int opcao;
    
    do
@@ -88,7 +89,7 @@ int main()
             listarprodutos(produto, qtdprodutos);
             break;
            case 5:
-            localizaproduto(produto, qtdprodutos, TAM_CARRINHO);
+            //localizaproduto(produto, qtdprodutos, TAM_CARRINHO);
             break;
            case 0:
             printf("\nObrigado, encerrando solicitação!\n");
@@ -230,39 +231,101 @@ void listarprodutos(struct produtos produto[], int qtdprodutos)
         printf("\n---------------------------------------------\n");
     }
 }
-int localizaproduto(struct produtos produto[], int qtdprodutos, int TAM_CARRINHO)
+int localizacliente(struct clientes cliente[], int qtdclientes)
 {
-    int valor = 0, continuar, quantidade = 0;
+    int valor = 0, encontrado;
     
-    if(quantidade >= TAM_CARRINHO)
-    {
-        printf("Limite de produtos atingidos!");
-    }
-    
-    printf("Digite o código do produto: ");
+    printf("Digite o código do cliente: ");
     scanf("%d", &valor);
     
+    for(int i = 0;  i < qtdclientes; i++)
+    {
+        encontrado = 0;
+        
+        if(cliente[i].codigo == valor)
+        {
+            encontrado = 1;
+            printf("\n|cliente Encontrado|\n");
+            printf("Código: %d\n", cliente[i].codigo);
+            printf("Nome: %s\n", cliente[i].nome);
+            printf("CPF: %.0lf\n", cliente[i].cpf);
+            printf("Sexo: %c\n", cliente[i].sexo);
+            printf("Telefone Fixo: %s\n", cliente[i].tel.fixo);
+            printf("Telefone movel: %s\n\n", cliente[i].tel.movel);
+        }
+        
+        if(!encontrado)
+        {
+            printf("Cliente não encontrado!");
+        }
+    }
+}
+int localizaproduto(struct produtos produto[], int qtdprodutos, int TAM_CARRINHO, struct carrinhos carrinho, int qtdcarrinho)
+{
+    int valor = 0, continuar;
+    int encontrado;
+    
+    if(qtdcarrinho >= 3)
+    {
+        printf("Carrinho Lotado!");
+    }
+    
+    if(qtdprodutos == 0)
+    {
+        printf("Nenhum Produto Cadastrado!");
+    }
+    
     do{
+        encontrado = 0;
+        
+        printf("Digite o código do produto: ");
+        scanf("%d", &valor);
+        
         for(int i = 0;  i < qtdprodutos; i++)
         {
             if(produto[i].codigo == valor)
             {
+                encontrado = 1;
+                carrinho.produto[qtdcarrinho] = produto[i];
                 printf("\n|Produto Encontrado|\n");
                 printf("Código: %d\n", produto[i].codigo);
                 printf("Nome: %s\n", produto[i].nome);
                 printf("Marca: %s\n", produto[i].modelo.marca);
                 printf("Modelo: %s\n", produto[i].modelo.modelo);
                 printf("Valor: %.2lf\n", produto[i].valor);
+                
+                qtdcarrinho++;
+                break;
             }
         }
         
-        if(quantidade < TAM_CARRINHO)
+        if(!encontrado)
+        {
+            printf("Produto não encontrado!");
+        }
+        if(qtdcarrinho < TAM_CARRINHO)
         {
             printf("\nDeseja solicitar outro produto (1 = Sim / 0 = Não): ");
             scanf("%d", &continuar);
         }else{
-            printf("Limite de produtos atingidos!");
+            printf("Limite de produtos atingidos!\n");
+            continuar = 0;
         }
         
-    }while(quantidade < TAM_CARRINHO && continuar == 1);
+    }while(continuar == 1 && qtdcarrinho < 3);
+    
+    return qtdcarrinho;
+}
+double calculasubtotal(struct carrinhos carrinho, int qtdcarrinho)
+{
+    carrinho.subtotal = 0;
+    
+    for(int i = 0; i < qtdcarrinho; i++)
+    {
+        carrinho.subtotal = carrinho.subtotal + carrinho.produto[i].valor;
+    }
+    
+    printf("O subtotal de sua compra é: %.2lf", carrinho.subtotal);
+    
+    return carrinho.subtotal;
 }
