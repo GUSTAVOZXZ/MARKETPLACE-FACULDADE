@@ -49,12 +49,12 @@ void listarprodutos(struct produtos produto[], int qtdprodutos);
 int localizaproduto(struct produtos produto[], int qtdprodutos, int TAM_CARRINHO, struct carrinhos carrinho, int qtdcarrinho);
 int localizacliente(struct clientes cliente[], int qtdclientes);
 double calculasubtotal (struct carrinhos carrinho, int qtdcarrinho);
-void efetuarvenda(struct carrinhos carrinho, struct clientes cliente[], int qtdclientes, struct produtos produto[], int qtdprodutos);
+double calculatotal(struct carrinhos carrinho, int qtdcarrinho);
 
 int main()
 {
-   struct clientes cliente[3];
-   struct produtos produto[10];
+   struct clientes cliente[TAM_CLI];
+   struct produtos produto[TAM_PROD];
    struct carrinhos carrinho;
    
    int TAM_CLI = 3, TAM_PROD = 10, TAM_CARRINHO = 3;
@@ -89,10 +89,11 @@ int main()
             listarprodutos(produto, qtdprodutos);
             break;
            case 5:
-            //localizaproduto(produto, qtdprodutos, TAM_CARRINHO);
+            //localizaproduto(produto, qtdprodutos, TAM_CARRINHO, carrinho, qtdcarrinho);
             break;
            case 0:
             printf("\nObrigado, encerrando solicitação!\n");
+            break;
            default:
             printf("\nOpção Inválida!\n");
        }
@@ -233,15 +234,13 @@ void listarprodutos(struct produtos produto[], int qtdprodutos)
 }
 int localizacliente(struct clientes cliente[], int qtdclientes)
 {
-    int valor = 0, encontrado;
+    int valor = 0, encontrado = 0;
     
     printf("Digite o código do cliente: ");
     scanf("%d", &valor);
     
     for(int i = 0;  i < qtdclientes; i++)
     {
-        encontrado = 0;
-        
         if(cliente[i].codigo == valor)
         {
             encontrado = 1;
@@ -325,7 +324,26 @@ double calculasubtotal(struct carrinhos carrinho, int qtdcarrinho)
         carrinho.subtotal = carrinho.subtotal + carrinho.produto[i].valor;
     }
     
-    printf("O subtotal de sua compra é: %.2lf", carrinho.subtotal);
-    
     return carrinho.subtotal;
+}
+double calculatotal(struct carrinhos carrinho, int qtdcarrinho)
+{
+    carrinho.total = 0;
+    char validar;
+    
+    printf("Algum desconto será aplicado na compra(S OU N)?");
+    scanf(" %c", &validar);
+    
+    if(validar == 'S' || validar == 's')
+    {
+        printf("Qual o desconto a ser aplicado(em %): ");
+        scanf("%lf", &carrinho.desconto);
+        
+        carrinho.total = carrinho.subtotal * (1 - carrinho.desconto / 100);
+        
+    }else{
+        carrinho.total = carrinho.subtotal;
+    }
+    
+    return carrinho.total;
 }
