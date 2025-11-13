@@ -50,11 +50,12 @@ int localizaproduto(struct produtos produto[], int qtdprodutos, int TAM_CARRINHO
 int localizacliente(struct clientes cliente[], int qtdclientes);
 double calculasubtotal (struct carrinhos carrinho, int qtdcarrinho);
 double calculatotal(struct carrinhos carrinho, int qtdcarrinho);
+void listarcarrinho(struct carrinhos carrinho, int qtdcarrinho);
 
 int main()
 {
-   struct clientes cliente[TAM_CLI];
-   struct produtos produto[TAM_PROD];
+   struct clientes cliente[3];
+   struct produtos produto[10];
    struct carrinhos carrinho;
    
    int TAM_CLI = 3, TAM_PROD = 10, TAM_CARRINHO = 3;
@@ -285,7 +286,6 @@ int localizaproduto(struct produtos produto[], int qtdprodutos, int TAM_CARRINHO
             if(produto[i].codigo == valor)
             {
                 encontrado = 1;
-                carrinho.produto[qtdcarrinho] = produto[i];
                 printf("\n|Produto Encontrado|\n");
                 printf("Código: %d\n", produto[i].codigo);
                 printf("Nome: %s\n", produto[i].nome);
@@ -294,7 +294,6 @@ int localizaproduto(struct produtos produto[], int qtdprodutos, int TAM_CARRINHO
                 printf("Valor: %.2lf\n", produto[i].valor);
                 
                 qtdcarrinho++;
-                break;
             }
         }
         
@@ -346,4 +345,23 @@ double calculatotal(struct carrinhos carrinho, int qtdcarrinho)
     }
     
     return carrinho.total;
+}
+void listarcarrinho(struct carrinhos carrinho, int qtdcarrinho)
+{
+    printf("||Cliente||\n");
+    printf("Nome: %s\n", carrinho.cliente.nome);
+    printf("Sexo: %c\n", carrinho.cliente.sexo);
+    printf("CPF: %d\n", carrinho.cliente.cpf);
+    printf("Telefone fixo: %s\n", carrinho.cliente.tel.fixo);
+    printf("Telefone Móvel: %s\n", carrinho.cliente.tel.movel);
+    
+    for(int i = 0; i < qtdcarrinho; i++)
+    {
+        printf("\n|Produtos|\n");
+        printf("Código: %d\n", carrinho.produto[i].codigo);
+        printf("Nome: %s\n", carrinho.produto[i].nome);
+        printf("Marca: %s\n", carrinho.produto[i].modelo.marca);
+        printf("Modelo: %s\n", carrinho.produto[i].modelo.modelo);
+        printf("Valor: %.2lf\n", carrinho.produto[i].valor);
+    }
 }
