@@ -48,10 +48,10 @@ int cadastrarproduto(struct produtos produto[], int qtdprodutos, int TAM_PROD);
 void listarprodutos(struct produtos produto[], int qtdprodutos);
 int localizacliente(struct clientes cliente[], int qtdclientes);
 struct carrinhos localizaproduto(struct produtos produto[], int qtdprodutos, struct carrinhos carrinho, int TAM_CARRINHO);
-struct carrinhos calculasubtotal(struct carrinhos carrinho, int qtdcarrinho);
-struct carrinhos calculatotal(struct carrinhos carrinho, int qtdcarrinho);
-void listarcarrinho(struct carrinhos carrinho, int qtdcarrinho);
-void efetuarvenda(struct clientes cliente[], int qtdclientes, struct produtos produto[], int qtdprodutos, struct carrinhos carrinho, int TAM_CARRINHO, int qtdcarrinho);
+struct carrinhos calculasubtotal(struct carrinhos carrinho);
+struct carrinhos calculatotal(struct carrinhos carrinho);
+void listarcarrinho(struct carrinhos carrinho);
+void efetuarvenda(struct clientes cliente[], int qtdclientes, struct produtos produto[], int qtdprodutos, struct carrinhos carrinho, int TAM_CARRINHO);
 
 int main()
 {
@@ -311,18 +311,20 @@ struct carrinhos localizaproduto(struct produtos produto[], int qtdprodutos, str
     
     return carrinho;
 }
-struct carrinhos calculasubtotal(struct carrinhos carrinho, int qtdcarrinho)
+struct carrinhos calculasubtotal(struct carrinhos carrinho)
 {
     carrinho.subtotal = 0;
+    int qtdcarrinho = 0;
     
-    for(int i = 0; i < qtdcarrinho; i++)
+    while(qtdcarrinho < 3 && carrinho.produto[qtdcarrinho].codigo != 0)
     {
-        carrinho.subtotal = carrinho.subtotal + carrinho.produto[i].valor;
+        carrinho.subtotal = carrinho.subtotal + carrinho.produto[qtdcarrinho].valor;
+        qtdcarrinho++;
     }
     
     return carrinho;
 }
-struct carrinhos calculatotal(struct carrinhos carrinho, int qtdcarrinho)
+struct carrinhos calculatotal(struct carrinhos carrinho)
 {
     carrinho.total = 0;
     carrinho.desconto = 0;
@@ -338,14 +340,14 @@ struct carrinhos calculatotal(struct carrinhos carrinho, int qtdcarrinho)
         
         carrinho.total = carrinho.subtotal * (1 - carrinho.desconto / 100);
         
-    }else{
-        carrinho.total = carrinho.subtotal;
     }
     
     return carrinho;
 }
-void listarcarrinho(struct carrinhos carrinho, int qtdcarrinho)
+void listarcarrinho(struct carrinhos carrinho)
 {
+    int qtdcarrinho = 0;
+    
     printf("\n||Cliente||\n");
     printf("Nome: %s\n", carrinho.cliente.nome);
     printf("Sexo: %c\n", carrinho.cliente.sexo);
@@ -353,21 +355,21 @@ void listarcarrinho(struct carrinhos carrinho, int qtdcarrinho)
     printf("Telefone fixo: %s\n", carrinho.cliente.tel.fixo);
     printf("Telefone Móvel: %s\n", carrinho.cliente.tel.movel);
     
-    for(int i = 0; i < qtdcarrinho; i++)
+    while(qtdcarrinho< 3 && carrinho.produto[qtdcarrinho].codigo != 0)
     {
         printf("\n|Produtos|\n");
-        printf("Código: %d\n", carrinho.produto[i].codigo);
-        printf("Nome: %s\n", carrinho.produto[i].nome);
-        printf("Marca: %s\n", carrinho.produto[i].modelo.marca);
-        printf("Modelo: %s\n", carrinho.produto[i].modelo.modelo);
-        printf("Valor: %.2lf\n", carrinho.produto[i].valor);
+        printf("Código: %d\n", carrinho.produto[qtdcarrinho].codigo);
+        printf("Nome: %s\n", carrinho.produto[qtdcarrinho].nome);
+        printf("Marca: %s\n", carrinho.produto[qtdcarrinho].modelo.marca);
+        printf("Modelo: %s\n", carrinho.produto[qtdcarrinho].modelo.modelo);
+        printf("Valor: %.2lf\n", carrinho.produto[qtdcarrinho].valor);
     }
     
     printf("Subtotal da compra: %.2lf\n", carrinho.subtotal);
     printf("Desconto: %.0lf%%\n", carrinho.desconto);
     printf("Valor Total: %.2lf\n", carrinho.total);
 }
-void efetuarvenda(struct clientes cliente[], int qtdclientes, struct produtos produto[], int qtdprodutos, struct carrinhos carrinho, int TAM_CARRINHO, int qtdcarrinho)
+void efetuarvenda(struct clientes cliente[], int qtdclientes, struct produtos produto[], int qtdprodutos, struct carrinhos carrinho, int TAM_CARRINHO)
 {
     listarclientes(cliente, qtdclientes);
         
@@ -376,11 +378,11 @@ void efetuarvenda(struct clientes cliente[], int qtdclientes, struct produtos pr
     
     listarprodutos(produto, qtdprodutos);
             
-    localizaproduto(produto, qtdprodutos, carrinho, TAM_CARRINHO);
+    carrinho = localizaproduto(produto, qtdprodutos, carrinho, TAM_CARRINHO);
     
-    carrinho.subtotal = calculasubtotal(carrinho, qtdcarrinho);
-    carrinho.total = calculatotal(carrinho, qtdcarrinho);
+    carrinho = calculasubtotal(carrinho);
+    carrinho = calculatotal(carrinho);
     
-    listarcarrinho(carrinho, qtdcarrinho);
+    listarcarrinho(carrinho);
             
 }
