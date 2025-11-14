@@ -253,6 +253,8 @@ int localizacliente(struct clientes cliente[], int qtdclientes)
             printf("Sexo: %c\n", cliente[i].sexo);
             printf("Telefone Fixo: %s\n", cliente[i].tel.fixo);
             printf("Telefone movel: %s\n\n", cliente[i].tel.movel);
+            
+            return i;
         }
         
         if(!encontrado)
@@ -260,7 +262,6 @@ int localizacliente(struct clientes cliente[], int qtdclientes)
             printf("Cliente não encontrado!");
         }
     }
-    return encontrado;
 }
 struct carrinhos localizaproduto(struct produtos produto[], int qtdprodutos, struct carrinhos carrinho, int TAM_CARRINHO)
 {
@@ -355,7 +356,7 @@ void listarcarrinho(struct carrinhos carrinho)
     printf("Telefone fixo: %s\n", carrinho.cliente.tel.fixo);
     printf("Telefone Móvel: %s\n", carrinho.cliente.tel.movel);
     
-    while(qtdcarrinho< 3 && carrinho.produto[qtdcarrinho].codigo != 0)
+    do
     {
         printf("\n|Produtos|\n");
         printf("Código: %d\n", carrinho.produto[qtdcarrinho].codigo);
@@ -363,7 +364,9 @@ void listarcarrinho(struct carrinhos carrinho)
         printf("Marca: %s\n", carrinho.produto[qtdcarrinho].modelo.marca);
         printf("Modelo: %s\n", carrinho.produto[qtdcarrinho].modelo.modelo);
         printf("Valor: %.2lf\n", carrinho.produto[qtdcarrinho].valor);
-    }
+        
+        qtdcarrinho++;
+    }while(qtdcarrinho < 3 && carrinho.produto[qtdcarrinho].codigo != 0);
     
     printf("Subtotal da compra: %.2lf\n", carrinho.subtotal);
     printf("Desconto: %.0lf%%\n", carrinho.desconto);
