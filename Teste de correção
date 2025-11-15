@@ -300,6 +300,8 @@ struct carrinhos localizaproduto(struct produtos produto[], int qtdprodutos, str
                 printf("Modelo: %s\n", produto[i].modelo.modelo);
                 printf("Valor: %.2lf\n", produto[i].valor);
                 carrinho.produto[qtdcarrinho] = produto[i];
+                printf("Qual a quantidade desse produto você deseja: ");
+                scanf("%d", &carrinho.quantidade[i]);
                 qtdcarrinho++;
                 break;
             }
@@ -329,7 +331,7 @@ struct carrinhos calculasubtotal(struct carrinhos carrinho)
     for (int i = 0; i < 3; i++)
     {
         if(carrinho.produto[i].codigo != 0)
-        carrinho.subtotal = carrinho.subtotal + carrinho.produto[i].valor;
+        carrinho.subtotal = carrinho.subtotal + (carrinho.produto[i].valor*carrinho.quantidade[i]);
     }
     
     return carrinho;
@@ -365,20 +367,21 @@ void listarcarrinho(struct carrinhos carrinho)
     printf("Telefone Móvel: %s\n", carrinho.cliente.tel.movel);
     
     printf("\n| Código |       Nome       |    Marca    |     Modelo    |   Valor    |\n");
-printf("-----------------------------------------------------------------------------\n");
+printf("---------------------------------------------------------------------------------------------\n");
 
 for (int i = 0; i < 3; i++)
 {
     if (carrinho.produto[i].codigo != 0)
     {
-        printf("| %-6d | %-16s | %-11s | %-14s | R$ %-7.2lf |\n",
+        printf("| %-6d | %-20s | %-15s | %-15s | R$ %-8.2lf | %-10d |\n",
                carrinho.produto[i].codigo,
                carrinho.produto[i].nome,
                carrinho.produto[i].modelo.marca,
                carrinho.produto[i].modelo.modelo,
-               carrinho.produto[i].valor);
+               carrinho.produto[i].valor,
+               carrinho.quantidade[i]);
 
-        printf("-----------------------------------------------------------------------------\n");
+        printf("---------------------------------------------------------------------------------------------\n");
     }
 }
     
