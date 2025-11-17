@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+/*Estruturas*/
+
 struct telefones
 {
     char fixo[15];
@@ -40,6 +42,8 @@ struct carrinhos
     
 };
 
+/*Funções declaradas acima da MAIN*/
+
 int codigocliente(double cpf);
 int cadastrarclientes(struct clientes cliente[], int qtdclientes, int TAM_CLI);
 void listarclientes(struct clientes cliente[], int qtdclientes);
@@ -56,31 +60,14 @@ struct carrinhos finalizarvenda(struct carrinhos carrinho);
 
 int main()
 {
-   int TAM_CARRINHO = 3, TAM_CLI = 3, TAM_PROD = 10;
-
-    struct clientes cliente[3] = {
-        {1, "Gustavo Ribeiro", 12345678901.0, 'M', {"3333-1111", "99999-1111"}},
-        {2, "Thiago Souza",    98765432100.0, 'M', {"3333-2222", "99999-2222"}},
-        {3, "Joao Silva",      11122233344.0, 'M', {"3333-3333", "99999-3333"}}
-    };
-    int qtdclientes = 3;
-
-    struct produtos produto[10] = {
-        {10, "Mouse Gamer", 199.90, { "Logitech", "G305" }},
-        {20, "Teclado Mecânico", 299.90, { "Redragon", "Draconic" }},
-        {30, "Headset Gamer", 279.90, { "HyperX", "Cloud Stinger" }},
-        {40, "Headset Gamer", 289.90, { "JBL", "xxxxx" }},
-        {50, "Headset Gamer", 189.90, { "Havit", "xxxxxxx" }},
-        {60, "Teclado", 219.90, { "Logitech", "Semi-Mecânico" }},
-        {70, "Camiseta", 89.90, { "Nike", "Regata" }},
-        {80, "Meia", 69.90, { "Adidas", "Cano Alto" }},
-        {90, "Tênis", 499.90, { "Nike", "Jordan" }},
-        {100, "Notebook", 4599.90, { "Avell", "ION A52" }}
-    };
-    int qtdprodutos = 10;
-
+    struct clientes cliente[3];
+    struct produtos produto[10];
     struct carrinhos carrinho = {0};
-    int opcao;
+    
+    int TAM_CARRINHO = 3, TAM_CLI = 3, TAM_PROD = 10;
+    int opcao, qtdclientes = 0, qtdprodutos = 0;
+   
+   /*Menu de opções visual*/
    
    do
    {
@@ -94,6 +81,8 @@ int main()
        printf("0 - Sair\n");
        printf("Digite sua opção: ");
        scanf("%d", &opcao);
+     
+     /*Funções de cada valor escolhido pelo cliente*/
        
        switch(opcao)
        {
@@ -123,11 +112,16 @@ int main()
    return 0;
 }
 
+/*Calculo para código do cliente pelo seu CPF*/
+
 int codigocliente(double cpf) 
 {
     int codigo = (int)(cpf / 100000);
     return codigo;
 }
+
+/*Função para cadastro dos clientes*/
+
 int cadastrarclientes(struct clientes cliente[], int qtdclientes, int TAM_CLI)
 {
     int continuar;
@@ -166,6 +160,9 @@ int cadastrarclientes(struct clientes cliente[], int qtdclientes, int TAM_CLI)
     
     return qtdclientes;
 }
+
+/*Calculo para codigo do produto pela marca e modelo*/
+
 int produtoscodigo(struct modelos modelo)
 {
     char c1 = modelo.marca[0];
@@ -179,9 +176,12 @@ int produtoscodigo(struct modelos modelo)
     int v4 = c4;
 
     int hash = v1 * (31*31*31) + v2 * (31*31) + v3 * 31 + v4;
-
-    return hash;
+    
+    return hash; /**Retorno para o cálculo HASH*/
 }
+
+/*Função desenvolvida para cadastro de produtos*/
+
 int cadastrarproduto(struct produtos produto[], int qtdprodutos, int TAM_PROD)
 {
     int continuar;
@@ -189,7 +189,8 @@ int cadastrarproduto(struct produtos produto[], int qtdprodutos, int TAM_PROD)
     if(qtdprodutos >= TAM_PROD)
     {
         printf("\nLimite de cadastro atingido!\n");
-        return qtdprodutos;
+        
+        return qtdprodutos; /*Retorno ao final do cadastro após limite atingido*/
     }
     
     do
@@ -205,7 +206,7 @@ int cadastrarproduto(struct produtos produto[], int qtdprodutos, int TAM_PROD)
         printf("Valor: ");
         scanf("%lf", &produto[qtdprodutos].valor);
         
-        qtdprodutos++;
+        qtdprodutos++; /*Variável declarada salvar o cadastro a cada passagem da repetição*/
         
         if(qtdprodutos < TAM_PROD)
             {
@@ -216,13 +217,17 @@ int cadastrarproduto(struct produtos produto[], int qtdprodutos, int TAM_PROD)
                 }
     }while(qtdprodutos < TAM_PROD && continuar == 1);
     
-    return qtdprodutos;
+    return qtdprodutos; /*Laço de retorno ao final do código para retornar o valor salvo*/
 }
+
+/*Função para listar os clientes cadastrados*/
+
 void listarclientes(struct clientes cliente[], int qtdclientes)
 {
     if(qtdclientes == 0)
     {
         printf("\nNão há nenhum cliente cadastrado!\n");
+        return; /*Laço de retorno para sair da listagem ao verificar que não há cliente cadastrado*/
     }
     
     for(int i = 0; i < qtdclientes; i++)
@@ -237,11 +242,15 @@ void listarclientes(struct clientes cliente[], int qtdclientes)
         printf("\n---------------------------------------------\n");
     }
 }
+
+/*Função para listar os produtos cadastrados*/
+
 void listarprodutos(struct produtos produto[], int qtdprodutos)
 {
     if(qtdprodutos == 0)
     {
         printf("\nNão há nenhum produto cadastrado!\n");
+        return; /*Laço de retorno para sair da listagem ao verificar que não há produtos cadastrados*/
     }
     
     for(int i = 0; i < qtdprodutos; i++)
@@ -255,9 +264,17 @@ void listarprodutos(struct produtos produto[], int qtdprodutos)
         printf("\n---------------------------------------------\n");
     }
 }
+
+/*Função para localizar o cliente cadastrado e salvar no carrinho*/
+
 int localizacliente(struct clientes cliente[], int qtdclientes)
 {
     int valor = 0, encontrado = 0;
+    
+    if(qtdclientes == 0)
+    {
+        return -1; /*Laço de retorno para sair ao verificar que não há cliente cadastrado*/
+    }
     
     printf("Digite o código do cliente: ");
     scanf("%d", &valor);
@@ -279,8 +296,11 @@ int localizacliente(struct clientes cliente[], int qtdclientes)
         }
     }
 
-    return -1;
+    return -1; /*Laço de retorno para sair da localização ao não encontrar clientes*/
 }
+
+/*Função para localizar os produtos e salvar no carrinho*/
+
 struct carrinhos localizaproduto(struct produtos produto[], int qtdprodutos, struct carrinhos carrinho, int TAM_CARRINHO)
 {
     int valor = 0, continuar;
@@ -289,6 +309,7 @@ struct carrinhos localizaproduto(struct produtos produto[], int qtdprodutos, str
     if(qtdprodutos == 0)
     {
         printf("\nNenhum Produto Cadastrado!\n");
+        return carrinho; /*Laço de retorno para sair da localização quando não há produto cadastrado*/
     }
     
     do{
@@ -308,10 +329,10 @@ struct carrinhos localizaproduto(struct produtos produto[], int qtdprodutos, str
                 printf("Marca: %s\n", produto[i].modelo.marca);
                 printf("Modelo: %s\n", produto[i].modelo.modelo);
                 printf("Valor: %.2lf\n", produto[i].valor);
-                carrinho.produto[qtdcarrinho] = produto[i];
+                carrinho.produto[qtdcarrinho] = produto[i]; /*Função recebe o valor do produto localizado*/
                 printf("\nQual a quantidade desse produto você deseja: ");
                 scanf("%d", &carrinho.quantidade[qtdcarrinho]);
-                qtdcarrinho++;
+                qtdcarrinho++; /*Variavel que salva o produto localizado a cada passagem da função*/
                 break;
             }
         }
@@ -331,8 +352,11 @@ struct carrinhos localizaproduto(struct produtos produto[], int qtdprodutos, str
         
     }while(continuar == 1 && qtdcarrinho < TAM_CARRINHO);
     
-    return carrinho;
+    return carrinho; /*Laço de retorno para voltar os valores na estrutura carrinho*/
 }
+
+
+/*Função para calcular o SubTotal da compra de todos os produtos*/
 struct carrinhos calculasubtotal(struct carrinhos carrinho)
 {
     carrinho.subtotal = 0;
@@ -343,8 +367,11 @@ struct carrinhos calculasubtotal(struct carrinhos carrinho)
         carrinho.subtotal = carrinho.subtotal + (carrinho.produto[i].valor*carrinho.quantidade[i]);
     }
     
-    return carrinho;
+    return carrinho; /*Laço de retorno para voltar os valores na estrutura carrinho*/
 }
+
+/*Função para calcular o total da compra após o desconto aplicado em SubTotal*/
+
 struct carrinhos calculatotal(struct carrinhos carrinho)
 {
     carrinho.desconto = 0;
@@ -364,8 +391,11 @@ struct carrinhos calculatotal(struct carrinhos carrinho)
         carrinho.total = carrinho.subtotal;
     }
     
-    return carrinho;
+    return carrinho; /*Laço de retorno para voltar os valores na estrutura carrinho*/
 }
+
+/*Função para listar o carrinho com o cliente e os produtos salvos*/
+
 void listarcarrinho(struct carrinhos carrinho)
 {
     printf("\n||Cliente||\n");
@@ -375,29 +405,31 @@ void listarcarrinho(struct carrinhos carrinho)
     printf("Telefone fixo: %s\n", carrinho.cliente.tel.fixo);
     printf("Telefone Móvel: %s\n", carrinho.cliente.tel.movel);
     
-    printf("\n| Código |          Nome            |    Marca    |    Modelo    |  Valor    | Quant. |\n");
-    printf("--------------------------------------------------------------------------------\n");
-
+    printf("\n| Código |       Nome       |   Marca    |   Modelo   |   Valor    | Quant. |\n");
+    printf("----------------------------------------------------------------------------------\n");
+    
     for (int i = 0; i < 3; i++)
     {
         if (carrinho.produto[i].codigo != 0)
         {
-            printf("| %-6d | %-12s | %-11s | %-11s | R$ %-7.2lf | %-6d |\n",
+            printf("| %-6d | %-16s | %-10s | %-10s | R$ %-8.2lf | %-6d |\n",
                    carrinho.produto[i].codigo,      
                    carrinho.produto[i].nome,        
                    carrinho.produto[i].modelo.marca,
                    carrinho.produto[i].modelo.modelo,
                    carrinho.produto[i].valor,       
-                   carrinho.quantidade[i]);         
-
-            printf("--------------------------------------------------------------------------------\n");
+                   carrinho.quantidade[i]);     
+            printf("----------------------------------------------------------------------------------\n");
         }
     }
     
-    printf("Subtotal da compra: %.2lf\n", carrinho.subtotal);
+    printf("Subtotal da compra: R$ %.2lf\n", carrinho.subtotal); 
     printf("Desconto: %.0lf%%\n", carrinho.desconto);
-    printf("Valor Total: %.2lf\n", carrinho.total);
+    printf("Valor Total: R$ %.2lf\n", carrinho.total); 
 }
+
+/*Função para validar a conclusão da venda com o cliente*/
+
 struct carrinhos finalizarvenda(struct carrinhos carrinho)
 {
     char escolha;
@@ -412,8 +444,11 @@ struct carrinhos finalizarvenda(struct carrinhos carrinho)
         printf("\nCompra cancelada!\n");
     }
     
-    return carrinho;
+    return carrinho;/*Laço de retorno para voltar ao menu após a validação*/
 }
+
+/*Função para trazer todas as informações para listagem de cliente, produtos e efetuar a venda com o cliente*/
+
 struct carrinhos efetuarvenda(struct clientes cliente[], int qtdclientes, struct produtos produto[], int qtdprodutos, struct carrinhos carrinho, int TAM_CARRINHO)
 {
     int idxcliente, i;
@@ -421,34 +456,34 @@ struct carrinhos efetuarvenda(struct clientes cliente[], int qtdclientes, struct
     
     listarclientes(cliente, qtdclientes);
         
-    idxcliente = localizacliente(cliente, qtdclientes);
+    idxcliente = localizacliente(cliente, qtdclientes); /*Variavel que recebe o valor localizado pela função e apresentação na tela*/
     
-   if(idxcliente < 0)
+   if(idxcliente < 0) /*Caso não encontrar o cliente pelo código*/
     {
         printf("\nCliente não encontrado, cancelando a venda.\n");
-        return carrinho;
+        return carrinho; /*Após verificar que o código não corresponde aos clientes, retorna ao final do código gerando o menu inicial*/
     }
     
-    carrinho.cliente = cliente[idxcliente];
+    carrinho.cliente = cliente[idxcliente]; /*Função carrinho recebendo o valor da variável que localizou o cliente*/
     
-    listarprodutos(produto, qtdprodutos);
+    listarprodutos(produto, qtdprodutos); /*Listar todos os produtos cadastrados no código*/
             
-    carrinho = localizaproduto(produto, qtdprodutos, carrinho, TAM_CARRINHO);
+    carrinho = localizaproduto(produto, qtdprodutos, carrinho, TAM_CARRINHO); /*Estrutura carrinho guarda o valor do produto localizado e apresenta no Display*/
     
-    carrinho = calculasubtotal(carrinho);
-    carrinho = calculatotal(carrinho);
+    carrinho = calculasubtotal(carrinho); /*Estutura carrinho guarda o valor de subtotal após os produtos localizados*/
+    carrinho = calculatotal(carrinho); /*Estrutura carrinho guarda o valor total após o calculo de subtotal dos produtos localizados*/
     
     for(i = 0; i < TAM_CARRINHO; i++)
     {
         if(carrinho.produto[i].codigo != 0)
         {
-            qtdcarrinho++;
+            qtdcarrinho++; /*Estrutura que define o tamanho do carrinho, verifica se o código do produto é valido e salva na variavel*/
         }
     }
     
-    listarcarrinho(carrinho);
-    finalizarvenda(carrinho);
+    listarcarrinho(carrinho); /*Lista todas as informações após executar o código*/
+    finalizarvenda(carrinho); /*Valida com o usuário a efetividade da venda*/
     printf("\n");
     
-    return carrinho;
+    return carrinho; /*Retorna para o menu inicial*/
 }
